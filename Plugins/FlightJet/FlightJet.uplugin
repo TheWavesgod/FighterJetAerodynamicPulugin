@@ -1,0 +1,24 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.0",
+	"FriendlyName": "FlightJet",
+	"Description": "A simple physical simulation of aerodynamic characteristics of fighter aircraft",
+	"Category": "Other",
+	"CreatedBy": "TianranXu",
+	"CreatedByURL": "",
+	"DocsURL": "",
+	"MarketplaceURL": "",
+	"SupportURL": "",
+	"CanContainContent": true,
+	"IsBetaVersion": false,
+	"IsExperimentalVersion": false,
+	"Installed": false,
+	"Modules": [
+		{
+			"Name": "FlightJet",
+			"Type": "Runtime",
+			"LoadingPhase": "Default"
+		}
+	]
+}
