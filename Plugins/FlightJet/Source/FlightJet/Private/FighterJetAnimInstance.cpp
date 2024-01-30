@@ -61,4 +61,5 @@ void UFighterJetAnimInstance::NativeUpdateAnimation(float DeltaSeconds)
 		}
 		RuddersYaw[i] = FlightComponent->RuddersYaw[i];
 	}
+	bIsWheelsRetreated = FlightComponent->GetIsWheelsRetreated();
 }

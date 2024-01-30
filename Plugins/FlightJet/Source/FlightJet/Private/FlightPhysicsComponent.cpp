@@ -68,15 +68,15 @@ void UFlightPhysicsComponent::DebugEveryTick()
 	{
 		AddDebugMessageOnScreen(0.0f, FColor::Green, FString::Printf(TEXT("WheelForce: %d"), FMath::RoundToInt32(i.Length())));
 	}
-	if (JetMesh)
+	/*if (JetMesh)
 	{
 		DrawDebugSphere(GetWorld(), JetMesh->GetCenterOfMass(), 30.0f, 8, FColor::Red, false, 0.0f);
-	}
+	}*/
 	for (int i = 0; i < CurrentThrusters.Num(); ++i)
 	{
 		AddDebugMessageOnScreen(0.0f, FColor::Red, FString::Printf(TEXT("Thruster %d: %d"), i, FMath::RoundToInt32(CurrentThrusters[i])));
 	}
-	DrawDebugLine(GetWorld(), JetMesh->GetComponentLocation(), JetMesh->GetComponentLocation() + JetMesh->GetPhysicsLinearVelocity(), FColor::Red, false, 0.0f);
+	//DrawDebugLine(GetWorld(), JetMesh->GetComponentLocation(), JetMesh->GetComponentLocation() + JetMesh->GetPhysicsLinearVelocity(), FColor::Red, false, 0.0f);
 }
 
 void UFlightPhysicsComponent::AddDebugMessageOnScreen(const float DisplayTime, const FColor Color, const FString DiplayString)
@@ -611,7 +611,7 @@ void UFlightPhysicsComponent::FlyingControlTick(float DeltaTime)
 	if (FMath::Abs(ControlStickY) < 0.01f)
 	{
 		float JetAngularSpeedPitch = JetMeshAngularVelocityInRadians.Dot(JetMesh->GetRightVector());
-		TargetStickY = FMath::GetMappedRangeValueClamped(FVector2D(-0.3f, 0.3f), FVector2D(-1.0f, 1.0f), JetAngularSpeedPitch); 
+		TargetStickY = FMath::GetMappedRangeValueClamped(FVector2D(-0.5f, 0.5f), FVector2D(-1.0f, 1.0f), JetAngularSpeedPitch); 
 		TargetStickY = -TargetStickY;
 	}
 	else
@@ -620,13 +620,13 @@ void UFlightPhysicsComponent::FlyingControlTick(float DeltaTime)
 		{
 			if (GForce > FlyingControlSystemParameters.GForceLimit.X + 0.1f)
 			{
-				SuitableControlYUpLimit = FMath::FInterpTo(SuitableControlYUpLimit, ControlStickY, DeltaTime, 5.0f);
+				SuitableControlYUpLimit = FMath::FInterpTo(SuitableControlYUpLimit, ControlStickY, DeltaTime, 2.0f);
 			}
 			else if (GForce < FlyingControlSystemParameters.GForceLimit.X - 0.1f)
 			{
 				float OverloadRatio = GForce / FlyingControlSystemParameters.GForceLimit.X;
 				float controlInputAdjustment = FMath::Clamp(1.0f / OverloadRatio, 0.0f, 1.0f);
-				SuitableControlYUpLimit = FMath::FInterpTo(SuitableControlYUpLimit, SuitableControlYUpLimit * controlInputAdjustment, DeltaTime, 2.0f);
+				SuitableControlYUpLimit = FMath::FInterpTo(SuitableControlYUpLimit, SuitableControlYUpLimit * controlInputAdjustment, DeltaTime, 5.0f);
 			}
 			TargetStickY = FMath::GetMappedRangeValueClamped(FVector2D(0.0f, 1.0f), FVector2D(0.0f, SuitableControlYUpLimit), ControlStickY);
 		}
@@ -634,13 +634,13 @@ void UFlightPhysicsComponent::FlyingControlTick(float DeltaTime)
 		{
 			if (GForce < FlyingControlSystemParameters.GForceLimit.Y - 0.1f)
 			{
-				SuitableControlYDownLimit = FMath::FInterpTo(SuitableControlYDownLimit, ControlStickY, DeltaTime, 5.0f);
+				SuitableControlYDownLimit = FMath::FInterpTo(SuitableControlYDownLimit, ControlStickY, DeltaTime, 2.0f);
 			}
 			else if (GForce > FlyingControlSystemParameters.GForceLimit.Y + 0.1f)
 			{
 				float OverloadRatio = GForce / FlyingControlSystemParameters.GForceLimit.Y;
 				float controlInputAdjustment = FMath::Clamp(1.0f / OverloadRatio, 0.0f, 1.0f);
-				SuitableControlYDownLimit = FMath::FInterpTo(SuitableControlYDownLimit, SuitableControlYDownLimit * controlInputAdjustment, DeltaTime, 2.0f);
+				SuitableControlYDownLimit = FMath::FInterpTo(SuitableControlYDownLimit, SuitableControlYDownLimit * controlInputAdjustment, DeltaTime, 5.0f);
 			}
 			TargetStickY = FMath::GetMappedRangeValueClamped(FVector2D(-1.0f, 0.0f), FVector2D(SuitableControlYDownLimit, 0.0f), ControlStickY);
 
@@ -687,6 +687,11 @@ void UFlightPhysicsComponent::SetWheelsBrake(float AxisValue)
 void UFlightPhysicsComponent::SetSteeringWheels(float AxisValue)
 {
 	TargetWheelTurnRate = FMath::Clamp(AxisValue, -1.0f, 1.0f);
+}
+
+void UFlightPhysicsComponent::SetWheelsRetreated(bool bIsRetreated)
+{
+	bIsWheelsRetreated = bIsRetreated;
 }
 
 void UFlightPhysicsComponent::SetAddThruster(float AxisValue)

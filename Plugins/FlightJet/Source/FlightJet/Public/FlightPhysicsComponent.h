@@ -276,6 +276,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetSteeringWheels(float AxisValue);
 
+	UFUNCTION(BlueprintCallable)
+	void SetWheelsRetreated(bool bIsRetreated);
+
 	/** Axis Value between -1 - 1 will add to throttle*/
 	UFUNCTION(BlueprintCallable)
 	void SetAddThruster(float AxisValue);
@@ -365,6 +368,8 @@ private:
 	  FVector WheelDragForce;
 	  float TargetWheelTurnRate = 0.0f;
 	  float CurrentWheelTurnRate = 0.0f;
+
+	  bool bIsWheelsRetreated = false;
 
 	  /**
 		* Function use for Thruster calculation
@@ -469,4 +474,7 @@ public:
 
 	UFUNCTION(BlueprintPure)
 	FORCEINLINE bool GetFlyingControlSystemState() const { return bFlyingControlWork; }
+
+	UFUNCTION(BlueprintPure)
+	FORCEINLINE bool GetIsWheelsRetreated() const { return bIsWheelsRetreated; }
 };

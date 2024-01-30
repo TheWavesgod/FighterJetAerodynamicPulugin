@@ -39,6 +39,9 @@ private:
 
 	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	TArray<float> RuddersYaw;
+
+	UPROPERTY(BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	bool bIsWheelsRetreated;
 	
 public:
 	FORCEINLINE void SetFlightComponent(UFlightPhysicsComponent* AnimInsPtr) { FlightComponent = AnimInsPtr; }
